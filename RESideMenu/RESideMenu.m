@@ -475,6 +475,14 @@
     self.contentViewContainer.frame = frame;
 }
 
+- (void)addPanGesture
+{
+    self.view.multipleTouchEnabled = NO;
+    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
+    self.panGesture.delegate = self;
+    [self.view addGestureRecognizer:self.panGesture];
+}
+
 #pragma mark -
 #pragma mark iOS 7 Motion Effects (Private)
 
@@ -775,6 +783,20 @@
     
     [self addMenuViewControllerMotionEffects];
     [self.view bringSubviewToFront:self.contentViewContainer];
+}
+
+-(void)setPanGestureEnabled:(BOOL)panGestureEnabled
+{
+    if (_panGestureEnabled != panGestureEnabled) {
+        _panGestureEnabled = panGestureEnabled;
+        
+        if (!_panGestureEnabled) {
+            [self.view removeGestureRecognizer:self.panGesture];
+        }
+        else{
+            [self addPanGesture];
+        }
+    }
 }
 
 #pragma mark -
